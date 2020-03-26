@@ -23,7 +23,6 @@
           </li>
         </ul>
       </form>
-      <?php print_r($getCourses) ?>
       <table class="courses">
         <thead>
           <th>Курс</th>
@@ -35,6 +34,10 @@
             <tr>
               <td>
                   <?= $course['name']; ?>
+                  <form action="/student/new">
+                      <input type="hidden" name="course" value="<?= $course['id']; ?>">
+                      <button type="submit">Добавить ученика</button>
+                  </form>
                   <form action="/course/edit">
                       <input type="hidden" name="id" value="<?= $course['id']; ?>">
                       <button type="submit">Редактировать</button>
@@ -84,7 +87,10 @@
         </tbody>
       </table>
       </div>
-    <script src="/Assets/js/main.js"></script>
+    <script src="/Assets/js/course.js" defer></script>
+      <script defer>
+          document.forms.course.addEventListener('submit', function(event) {addCourse(event, this,  'add')});
+      </script>
     </body>
 </html>
 

@@ -5,7 +5,6 @@ namespace Application\Controllers;
 use System\Base\Request;
 use System\Helpers\FileHelper;
 use System\View;
-use Application\Models\Course;
 use Application\Models\Student;
 use Application\Models\courseStudent;
 
@@ -75,16 +74,24 @@ class StudentController
                 $email = $_POST['email'];
                 $image = null;
 
-                if (empty($surName) && empty($name) && empty($email)) {
+                if (empty($surName) || empty($name) || empty($email)) {
                     throw new \Exception(serialize(['message' => 'Заполните все обязательные поля']));
                 }
 
-                if (isset($_POST['photo']) && !empty($_POST['photo']) && isset($_POST['image'])) {
-                    if (file_exists('/Uploads/images/' . $_POST['photo'])) {
-                        unlink('/Uploads/images/' . $_POST['photo']);
+                if (strlen($surName) > 128 || strlen($name) > 128 || strlen($email) > 128) {
+                    throw new \Exception(serialize(['message' => 'Максимальная длина одного поля 128 символов.']));
+                }
+
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    throw new \Exception(serialize(['message' => 'Email введен не верно']));
+                }
+
+                if (isset($_POST['photo']) && !empty($_POST['photo']) && is_uploaded_file($_FILES['image']['tmp_name'])) {
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/Uploads/images/' . $_POST['photo'])) {
+                        unlink($_SERVER['DOCUMENT_ROOT'] . '/Uploads/images/' . $_POST['photo']);
                     }
                 } elseif (isset($_POST['photo']) && !empty($_POST['photo'])) {
-                    $image = $_POST[''];
+                    $image = $_POST['photo'];
                 }
 
                 $imgExt = ['image/jpeg', 'image/png'];
@@ -126,7 +133,7 @@ class StudentController
                 }
 
                 if (!$newStudent) {
-                    throw new \Exception('Что-то пошло не так');
+                    throw new \Exception(serialize(['message' => 'Что-то пошло не так']));
                 }
 
                 echo json_encode(['code' => 1, 'message' => $message]);

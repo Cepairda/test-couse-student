@@ -25,7 +25,10 @@
         </ul>
       </form>
       </div>
-    <script src="/Assets/js/courseEdit.js"></script>
+    <script src="/Assets/js/course.js" defer></script>
+      <script defer>
+          document.forms.course.addEventListener('submit', function(event) {addCourse(event, this,  'update')});
+      </script>
     </body>
 </html>
 

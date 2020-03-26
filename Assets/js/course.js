@@ -1,15 +1,12 @@
-document.forms.course.addEventListener('submit', editCourse);
-//document.getElementById('image').addEventListener('change', checkImage);
-
-function editCourse(event)
+function addCourse(event, form, func)
 {
-    let course = this;
+    let course = form;
 
     let formData = new FormData(course);
 
     let request = new XMLHttpRequest();
 
-    request.open('POST', '/course/update', true);
+    request.open('POST', '/course/' + func, true);
     request.responseType = 'json';
     request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 

@@ -5,32 +5,8 @@ namespace Application\Models;
 use System\Base\Model;
 use PDO;
 
-class Course extends Model {
-    public function getAllReviews($startPage = 1, $limit = 7, $sort = 'ASC')
-    {
-        $query = $this->db->prepare("
-            SELECT *,review.id AS review_id FROM review INNER JOIN subject 
-            ON review.subject_id = subject.id
-            ORDER BY date {$sort}
-            LIMIT :limit
-            OFFSET :offset
-        ");
-
-        $query->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $query->bindValue(':offset', ($startPage - 1) * $limit, PDO::PARAM_INT);
-
-        $query->execute();
-
-        return $query->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getCountReviews()
-    {
-        $query = $this->db->query('SELECT COUNT(*) FROM review');
-
-        return $query->fetchColumn();
-    }
-
+class Course extends Model
+{
     public function addCourse($courseName, $teacher)
     {
         $query = $this->db->prepare("
@@ -97,17 +73,11 @@ class Course extends Model {
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getCourses($coursesWithStudents)
+    public function getAllCourseStudents($coursesWithStudents)
     {
         $result = [];
 
         foreach ($coursesWithStudents as $courseWithStudent) {
-            $course = [];
-
-            ///$course['id'] = $courseWithStudent['courseId'];
-            //$course['name'] = $courseWithStudent['courseName'];
-            //$course['teacher'] = $courseWithStudent['teacher'];
-
             $result[$courseWithStudent['courseId']]['id'] = $courseWithStudent['courseId'];
             $result[$courseWithStudent['courseId']]['name'] = $courseWithStudent['courseName'];
             $result[$courseWithStudent['courseId']]['teacher'] = $courseWithStudent['teacher'];
@@ -123,7 +93,8 @@ class Course extends Model {
             }
         }
 
+        ksort($result);
+
         return $result;
     }
 }
-

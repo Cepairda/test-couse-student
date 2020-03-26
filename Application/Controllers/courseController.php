@@ -69,12 +69,15 @@ class CourseController
     {
         if (Request::isAjax() && Request::isPost()) {
             try {
-                $id = $_POST['id'];
                 $courseName = $_POST['course_name'];
                 $teacher = $_POST['teacher'];
 
-                if (empty($courseNameName) && empty($teacher)) {
+                if (empty($courseName) || empty($teacher)) {
                     throw new \Exception(serialize(['message' => 'Заполните все обязательные поля']));
+                }
+
+                if (strlen($courseName) > 128 || strlen($teacher) > 128) {
+                    throw new \Exception(serialize(['message' => 'Максимальная длина одного поля 128 символов.']));
                 }
 
                 $course = new Course();
@@ -82,12 +85,13 @@ class CourseController
                 if ($function == 'add') {
                     $newCourse = $course->addCourse($courseName, $teacher);
                 } elseif ($function == 'update') {
+                    $id = $_POST['id'];
                     $newCourse = $course->updateCourse($id, $courseName, $teacher);
                 }
 
 
                 if (!$newCourse) {
-                    throw new \Exception('Что-то пошло не так');
+                    throw new \Exception(serialize(['message' => 'Что-то пошло не так']));
                 }
 
                 echo json_encode(['code' => 1, 'message' => $message]);

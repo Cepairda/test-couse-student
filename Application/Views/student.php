@@ -22,7 +22,13 @@
             <input type="email" id="email" name="email" value="<?= $student['email'] ?? ''; ?>" placeholder="Введите фамилию" maxlength="128" required>
           </li>
           <li>
-            <label for="image">Изображение</label>
+            <label for="image">
+                Изображение
+                <?php if (isset($student['photo'])): ?>
+                <span>Загружено:</span>
+                <img src="/Uploads/images/<?= $student['photo'] ;?>" height="50">
+                <?php endif; ?>
+            </label>
             <input type="file" id="image" name="image" accept="image/jpeg,image/png">
           </li>
           <li>

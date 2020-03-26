@@ -7,20 +7,6 @@ use PDO;
 
 class Student extends Model
 {
-    public function getAllSubjects()
-    {
-        $query = $this->db->query('SELECT * FROM subject');
-
-        return $query->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getGroupCountSubject()
-    {
-        $query = $this->db->query('SELECT subject_id, COUNT(*) AS count FROM review GROUP BY subject_id');
-
-        return $query->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function addStudent($surname, $name, $email, $photo)
     {
         $query = $this->db->prepare("
